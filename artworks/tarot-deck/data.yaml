@@ -1,0 +1,24 @@
+id: 4
+title: "tarot deck"
+description: "an ongoing collaborative exploration of ancient divination through contemporary lens. each card reinterprets classical tarot archetypes using modern symbolism, creating a bridge between mystical tradition and digital age spirituality"
+process: "initial sketches developed into digital compositions, then transferred to linoleum blocks for hand-carved relief printing on textured paper. each card maintains the sacred geometry of traditional tarot while incorporating cybernetic and technological elements"
+
+# Main thumbnail image for the gallery grid
+thumbnail: "images/cards.jpg"
+
+# Series images that users can browse through in the modal
+series_images:
+  - "images/cards.jpg"
+
+# Process images showing the creation workflow
+process_images:
+  - "images/fool.png"
+
+# Optional external links
+# links:
+#   instagram: ""
+  
+# Optional metadata
+date: "2025-ongoing"
+medium: "lino cut prints on paper"
+tags: ["tarot", "collaboration", "ongoing"]

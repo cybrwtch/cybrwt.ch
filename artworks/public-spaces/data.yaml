@@ -1,0 +1,30 @@
+id: 5
+title: "public spaces"
+description: "ephemeral interventions questioning our inescapable modern relationship with technology and space"
+process: "mechnical cloud sketches are hand-drawn, photocopied to create textural depth, then applied to construction fences using wheatpaste. the temporary nature of these works reflects the transient quality of digital experience in physical space"
+
+# Main thumbnail image for the gallery grid
+thumbnail: "images/pub0.jpg"
+
+# Series images that users can browse through in the modal
+series_images:
+  - "images/pub0.jpg"
+  - "images/pub1.jpg"
+  - "images/pub2.jpg"
+  - "images/pub3.jpg"
+  - "images/pub4.jpg"
+  - "images/pub5.jpg"
+
+# Process images showing the creation workflow
+process_images:
+  - "images/pub6.jpg"
+  - "images/pub5.jpg"
+
+# Optional external links
+# links:
+#   instagram: ""
+  
+# Optional metadata
+date: "2023-2024"
+medium: "mixed media installation"
+tags: ["public art", "installation", "interactive", "urban"]

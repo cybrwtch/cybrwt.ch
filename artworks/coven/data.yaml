@@ -1,0 +1,27 @@
+id: 7
+title: "coven"
+description: "this series reimagines ancient practices of gathering, healing, and transformation within contemporary contexts of technology and community"
+process: "initial sketches are developed through ink printing on various papers, some pieces were then assembled into larger mixed-media collages"
+
+# Main thumbnail image for the gallery grid
+thumbnail: "images/cvn0.jpg"
+
+# Series images that users can browse through in the modal
+series_images:
+  - "images/cvn0.jpg"
+  - "images/cvn2.jpg"
+  - "images/cvn3.jpg"
+  - "images/cvn4.jpg"
+
+# Process images showing the creation workflow
+process_images:
+  - "images/cvn1.jpg"
+
+# Optional external links
+# links:
+#   instagram: ""
+  
+# Optional metadata
+date: "2023"
+medium: "ink prints on paper, collages"
+tags: ["mystical", "feminine", "ritual"]
