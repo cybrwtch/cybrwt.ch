@@ -1,0 +1,31 @@
+id: 6
+title: "sad computer girls"
+description: "haunting portraits of digital-age alienation. these works examine the paradox of hyperconnectivity breeding isolation, exploring themes of mental health, substance abuse, and self-harm through the lens of screen-mediated existence"
+process: "beginning with observational sketches, these evolve through digital manipulation and traditional printmaking techniques"
+
+# Main thumbnail image for the gallery grid
+thumbnail: "images/grl0.jpg"
+
+# Series images that users can browse through in the modal
+series_images:
+  - "images/grl0.jpg"
+  - "images/grl1.jpg"
+  - "images/grl2.jpg"
+  - "images/grl3.jpg"
+  - "images/grl4.jpg"
+  - "images/grl5.jpg"
+  - "images/grl6.jpg"
+
+# Process images showing the creation workflow
+#process_images:  
+#  - "images/grl5.jpg"
+#  - "images/grl6.jpg"
+
+# Optional external links
+# links:
+#   instagram: ""
+  
+# Optional metadata
+date: "2023-2024"
+medium: "digital art"
+tags: ["portrait", "digital", "melancholy", "glitch"]

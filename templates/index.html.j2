@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cybrwt.ch - artist</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>cybrwt.ch</h1>
+            </div>
+            <div class="nav-links">
+                <a href="https://www.instagram.com/cybrwt.ch/" target="_blank">instagram</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <p>exploring the intersection of art and spirituality</p>
+        </section>
+
+        <section id="gallery">
+            <div class="gallery-grid">
+                {% for artwork in artworks %}
+                <div class="artwork-item" data-artwork="{{ artwork.id }}">
+                    <img src="artworks/{{ artwork.folder }}/{{ artwork.thumbnail }}" alt="{{ artwork.title }}">
+                    <div class="artwork-overlay">
+                        <h4>{{ artwork.title }}</h4>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <div id="artwork-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-body">
+                <div class="modal-left">
+                    <div class="main-image-container">
+                        <img id="modal-image" src="" alt="">
+                        <div class="nav-arrows">
+                            <button id="prev-image" class="nav-arrow">‹</button>
+                            <button id="next-image" class="nav-arrow">›</button>
+                        </div>
+                        <div class="gallery-thumbnails">
+                            <div id="series-thumbnails" class="thumbnails-grid"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-info">
+                    <h3 id="modal-title"></h3>
+                    <p id="modal-description"></p>
+                    <div id="modal-meta" class="modal-meta"></div>
+                    <div id="modal-links" class="modal-links"></div>
+                    <div class="process-info">
+                        <h4>process</h4>
+                        <p id="modal-process"></p>
+                        <div id="process-images" class="process-images"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const artworkData = {
+            {% for artwork in artworks %}
+            {{ artwork.id }}: {
+                title: "{{ artwork.title }}",
+                description: "{{ artwork.description }}",
+                process: "{{ artwork.process }}",
+                folder: "{{ artwork.folder }}",
+                seriesImages: [
+                    {% for image in artwork.series_images %}
+                    "artworks/{{ artwork.folder }}/{{ image }}"{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                processImages: [
+                    {% for image in artwork.process_images %}
+                    "artworks/{{ artwork.folder }}/{{ image }}"{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ]{% if artwork.links %},
+                links: {
+                    {% for key, value in artwork.links.items() %}
+                    {{ key }}: "{{ value }}"{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                }{% endif %}{% if artwork.date %},
+                date: "{{ artwork.date }}"{% endif %}{% if artwork.medium %},
+                medium: "{{ artwork.medium }}"{% endif %}{% if artwork.tags %},
+                tags: [{% for tag in artwork.tags %}"{{ tag }}"{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        // Modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const artworkItems = document.querySelectorAll('.artwork-item');
+            const modal = document.getElementById('artwork-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDescription = document.getElementById('modal-description');
+            const modalMeta = document.getElementById('modal-meta');
+            const modalLinks = document.getElementById('modal-links');
+            const modalProcess = document.getElementById('modal-process');
+            const processImages = document.getElementById('process-images');
+            const seriesThumbnails = document.getElementById('series-thumbnails');
+            const closeBtn = document.querySelector('.close');
+            const prevBtn = document.getElementById('prev-image');
+            const nextBtn = document.getElementById('next-image');
+            
+            let currentImageIndex = 0;
+            let currentArtwork = null;
+
+            artworkItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const artworkId = this.dataset.artwork;
+                    const artwork = artworkData[artworkId];
+                    const imgSrc = this.querySelector('img').src;
+                    
+                    currentImageIndex = 0;
+                    currentArtwork = artwork;
+                    
+                    modalTitle.textContent = artwork.title;
+                    modalDescription.textContent = artwork.description;
+                    modalProcess.textContent = artwork.process;
+                    
+                    // Setup metadata
+                    modalMeta.innerHTML = '';
+                    const metaItems = [];
+                    if (artwork.date) metaItems.push(artwork.date);
+                    if (artwork.medium) metaItems.push(artwork.medium);
+                    if (metaItems.length > 0) {
+                        modalMeta.textContent = metaItems.join(' • ');
+                    }
+                    
+                    // Setup links
+                    modalLinks.innerHTML = '';
+                    if (artwork.links) {
+                        Object.entries(artwork.links).forEach(([key, url]) => {
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.textContent = key;
+                            link.target = '_blank';
+                            modalLinks.appendChild(link);
+                        });
+                    }
+                    
+                    // Setup series thumbnails
+                    seriesThumbnails.innerHTML = '';
+                    if (artwork.seriesImages && artwork.seriesImages.length > 0) {
+                        artwork.seriesImages.forEach((imageSrc, index) => {
+                            const img = document.createElement('img');
+                            img.src = imageSrc;
+                            img.alt = `series image ${index + 1}`;
+                            img.className = 'thumbnail';
+                            if (index === 0) img.classList.add('active');
+                            
+                            img.addEventListener('click', () => {
+                                currentImageIndex = index;
+                                updateMainImage(artwork.seriesImages[index]);
+                                updateActiveThumbnail(index);
+                            });
+                            
+                            seriesThumbnails.appendChild(img);
+                        });
+                        
+                        // Set initial main image
+                        modalImage.src = artwork.seriesImages[0];
+                    } else {
+                        modalImage.src = imgSrc;
+                    }
+                    
+                    // Setup process images
+                    processImages.innerHTML = '';
+                    if (artwork.processImages) {
+                        artwork.processImages.forEach(imageSrc => {
+                            const img = document.createElement('img');
+                            img.src = imageSrc;
+                            img.alt = 'process step';
+                            processImages.appendChild(img);
+                        });
+                    }
+                    
+                    updateNavigationButtons();
+                    modal.style.display = 'block';
+                });
+            });
+
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    modal.style.display = 'none';
+                } else if (event.key === 'ArrowLeft') {
+                    navigateImage(-1);
+                } else if (event.key === 'ArrowRight') {
+                    navigateImage(1);
+                }
+            });
+            
+            prevBtn.addEventListener('click', () => navigateImage(-1));
+            nextBtn.addEventListener('click', () => navigateImage(1));
+            
+            function navigateImage(direction) {
+                if (!currentArtwork || !currentArtwork.seriesImages) return;
+                
+                const newIndex = currentImageIndex + direction;
+                if (newIndex >= 0 && newIndex < currentArtwork.seriesImages.length) {
+                    currentImageIndex = newIndex;
+                    updateMainImage(currentArtwork.seriesImages[currentImageIndex]);
+                    updateActiveThumbnail(currentImageIndex);
+                    updateNavigationButtons();
+                }
+            }
+            
+            function updateMainImage(imageSrc) {
+                modalImage.src = imageSrc;
+            }
+            
+            function updateActiveThumbnail(activeIndex) {
+                const thumbnails = seriesThumbnails.querySelectorAll('.thumbnail');
+                thumbnails.forEach((thumb, index) => {
+                    thumb.classList.toggle('active', index === activeIndex);
+                });
+            }
+            
+            function updateNavigationButtons() {
+                if (!currentArtwork || !currentArtwork.seriesImages) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                    return;
+                }
+                
+                prevBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
+                prevBtn.disabled = currentImageIndex === 0;
+                nextBtn.disabled = currentImageIndex === currentArtwork.seriesImages.length - 1;
+            }
+        });
+    </script>
+</body>
+</html>
